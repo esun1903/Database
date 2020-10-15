@@ -1,4 +1,5 @@
-# Database ( 블로그를 따라치면서 정리 : https://yaboong.github.io/database/2018/03/09/database-anomaly-and-functional-dependency/ )
+# Database 
+##### ( 블로그를 따라치면서 정리 : https://yaboong.github.io/database/2018/03/09/database-anomaly-and-functional-dependency/ )
 
 ### SQL 정리 
 
