@@ -1,6 +1,383 @@
 # Database 
 ##### ( 블로그를 따라치면서 정리 : https://yaboong.github.io/database/2018/03/09/database-anomaly-and-functional-dependency/ )
+- SQL문 : 대소문자 구별하지 않음 (단, 데이터의 대소문자는 구분)
 
+- SQL 구문은 DCL , DDL , DML 로 구분될 수 있다. 
+
+### DDL  ( 데이터 정의어 )
+
+- 데이터베이스 객체의 구조를 정의한다. 
+
+- 테이블 생성, 컬럼 추가, 타입변경, 제약조건 지정, 수정 등
+
+  - CREATE : 데이터베이스 객체를 생성
+  - DROP : 데이터베이스 객체를 삭제 
+  - ALTER :  기존에 존재하는 데이터베이스 객체를 수정
+
+  
+
+  CREATE DATABASE SSAFYDB;
+
+  CREATE DATABASE SSAFYWEB 
+
+  DEFAULT CHARACTER SET UTF8MB4
+
+  COLLATE UTF8MB4_GENERAL_CI;   
+
+​       
+
+​       CREATE TABLE PRODUCT (
+
+​        PRODUCTNO INT PRIMARY KEY AUTO INCREMENT, 
+
+​         NAME VARCHAR(30) NOT NULL,
+
+​        PRICE INT DEFAULT 0, 
+
+​        REGISTERDATE TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
+
+​        ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+- Optional Attrivutes 및 제약 조건 
+
+  - **테이블** **생성** **제약조건**
+
+  - **총 5가지** 
+
+    - NOT NULL : NULL값 포함할 수 없음 , 반드시 쿼리문을 이용하여 값을 지정 
+
+    - 유니크 :  컬럼에 중복된 값을 저장할 수 없음. NULL값은 허용 
+
+    - PRIMARY KEY :  컬럼에 중복된 값을 저장할 수 없음 .NULL값도 허용하지 않음 
+
+      ​                              주로 ROW를 구분하기 위한 유일한 값을 지정할 때 사용 ' 기본키'
+
+    - FOREINGN KEY : 특정 테이블의 PK컬럼에 저장되어 있는 값만 저장 '참조값' ,'외래키'라고도 부름 . NULL값은 허용 . references를 이용하여 어떤 컬럼에 어떤 데이터를 참조하는지 반드시  지정 
+
+    - DEFAULT 'value' : NULL 값이 들어올 경우 기본 설정되는 값을 지정 
+
+    - CHECK : 해당 칼럼에 저장 가능한 데이터 값의 범위나 조건을 지정한다. 
+
+  ​          
+
+  +  UNSINGED : Type이 숫자인 경우만 해당되며 숫자가 0 또는 양수로 제한됨 
+  +  AUTO INCREMENT : 새 레코드가 추가 될 때마다 필드 값을 자동으로 1증가시킴 
+
+- DROP : 객체 삭제 
+
+  ` DROP DATABASE SSAFYWEB;`
+
+- ALTER : 기존에 존재하는 객체 수정 
+
+  `ALTER DATABASE SSAFYDB`
+
+  `DEFAULT CHARACTER SET UF816 ...`
+
+ ### DML (데이터조작어)
+
+- 데이터 조작 기능
+
+- 테이블의 레코드를 CRUD (Create, Retrieve, Update , Delete) 할 수 있다. 
+
+- insert(c)  : 데이터베이스 객체에 데이터를 입력
+
+- select(r) : 데이터베이스 객체에서 데이터를 조회
+
+- update(u) : 데이터베이스 객체에 데이터를 수정
+
+- delete(d) : 데이터베이스 객체에 데이터를 삭제
+
+  `INSERT INTO PRODUCT` 
+
+  `VALUES ( 1, "PRODUCT1" , 5000, NULL);`
+
+   `INSERT INTO PRODUCT (NAME, PRICE)`
+
+  `VALUES ("PRODUCT2". 10000);`
+
+  ====================================================
+
+  `UPDATE PRODUCT` 
+
+  `SET NAME="NEWNAME"`
+
+  `WHERE PRODUCTNO = 1;  // 주의 WHERE절을 생략하면 모든 데이터가 바뀜` 
+
+  =======================================================
+
+  `DELECT FROM PRODUCT`
+
+  `WHERE NAME = "NEWNAME" ; // 주의 WHERE절을 생략하면 모든 데이터가 바뀜` 
+
+  ==============================================================
+
+  `SELECT *`
+
+  `FROM PRODUCT;` 
+
+  ==============================================================
+
+  `SELECT PRODUCTNO,  PRICE`
+
+  ​     `CASE WHEN PRICE >  50000 THEN '고가'` 
+
+  ​                `ELSE  '저가'`
+
+  ​     `END '가격 분류'`
+
+  `FROM PRODUCT;` 
+
+  ================================================================
+
+  `SELECT PRODUCTNO, NAME`
+
+  `FROM PRODUCT` 
+
+  `WHERE PRICE < 40000;`
+
+  `` 
+
+  `SELECT PRODUCTNO , NAME`
+
+  `FROM PRODUCT` 
+
+  `WHERE NAME LIKE "%TV%"`
+
+  `OR NAME LIKE "%PHONE%" ;` 
+
+``        
+
+​        `SELECT PRODUCTNO , NAME`
+
+​         `FROM  PRODUCT`
+
+​       `WHERE NOT PRODUCTNO = 1;` 
+
+================================================================
+
+​        `SELECT PRODUCTNO , NAME`
+
+`FROM PRODUCT` 
+
+`WHERE PRICFE = NULL;` 
+
+`SELECT PRODUCT NO, NAMKE`
+
+`FROM PRODUCT` 
+
+`WHERE PRICE IS NULL;` 
+
+`SELECT PRODUCT NO, NAMKE`
+
+`FROM PRODUCT` 
+
+`WHERE PRICE IS NOT NULL;` 
+
+==================================================
+
+### DCL (데이터 제어어)
+
+- DB, Table의 접근권한이나 CRUD 권한을 정의
+- 특정 사용자에게 테이블의 검색권한 부여 / 금지 등 
+- grant : 데이터베이스 객체에 권한을 부여
+- revoke : 데이터베이스 객체 권한을 취소한다. 
+
+### TCL  ( 트랜잭션 제어어 )
+
+- transaction 란 데이터베이스의 논리적 연산 단위 
+  - commit : 실행한 Query를 최종적으로 적용
+  - rollback : 실행한 Query를 마지막 commit 전으로 취소시켜 데이터를 복구 
+
+### 간단 자료형
+
+date : yyyy - mm- dd
+
+time : hh:mm:ss
+
+datetime : yyyy-mm-dd hh:mm:ss
+
+timestamp: 1970-01-01 ~ 2037년 임의시간 
+
+- CHAR <-> VARCHAR 
+
+​          -  CHAR(20) : 20 공간 만큼 FILE SYSTEM에 할당
+
+- VARCHAR(20) : 저장한 크기만큼 할당됨 
+  - 길이가 20인 단어로 수정하게 된다면? 빈공간에 저장, LINK로 저장공간을 연결 
+
+**이진 데이터타입**  
+
+   - BINARY[(숫자)] -> 문자열로 저장됨 
+
+     
+
+     ### 내장함수
+
+     - ABS(절댓값), ROUND, TRUNCATE, POW, MOD (분자,분모)
+
+     - ROUND(숫자, 자릿수) :  자릿수 기준 반올림 -> '자릿수'까지 표현하겠다 
+     - ASCII(문자) : 아스키값 리턴 
+     - INSTR('문자열', '찾는문자열' ) : 위치 값 리턴 
+     - LEFR, RIGHT('문자열' ,개수)  
+     - REVERSE ('문자열') : 반전 
+     - LTRIM ('문자열') : 문자열 중 왼쪽의 공백을 제거 
+     - TRIM('문자열') : 양쪽 모두의 공백을 제거 
+
+     - LOWER('문자열') : 모든 문자를 소문자로 변경 
+     - UPPER('문자열') : 모든 문자를 대문자로 변경 
+
+     - YEAR , MONTH, MONTHNAME, DAYNAME (날짜) 
+     - DAYOFWEEK(날짜) : 일 1 ~ 토 7 
+     - WEEKDAY(날짜) : 월 0 ~ 일 6
+
+  #### 트랜잭션 명령어 
+
+      - ROLLBACK : 트랜잭션 선언 전으로 돌아감
+      - COMMIT  : 트랜잭션 이후 모든 동작을 적용 
+      - SAVEPOINT  POINT 1 : 세이브포인트를 지정 
+      - ROLLBACK TO SAVEPOINT POINT 1 : POINT 1 이전으로 돌아감 
+
+
+
+### VIEW 
+
+- 복잡한 쿼리문의 단순화를 위한 '가상테이블'
+
+- 물리적으로 저장되지 않음 
+
+- 목적
+
+  - 보안 - 일부 column만 view를 통해 접근하도록 
+  - 사용상의 편의 - view 생성을 통해 복잡한 쿼리의 단순화 
+  - 수행속도의 향상 
+
+  `create view 뷰이름` 
+
+  `as` 
+
+  `select 문` 
+
+  `예시` 
+
+  `create or replace view employee`
+
+  `as` 
+
+  `select empno, ename , job , hiredate, sal` 
+
+  `from emp`
+
+  `lest join dept`
+
+  `using(deptno)`
+
+### INDEX
+
+- 지정한 컬럼을 기준으로 메모리 영역에 목차를 Btree 형태로 생성 
+- 목적 : 데이터 조회의 성능 향상
+- PK & FK 에 대해 자동 인덱스를 생성함 
+
+​         `CREATE INDEX 인덱스명  ON 테이블명(컬럼명, ... );` 
+
+​         `CREATE INDEX idx_emp_ename on emp(ename);` 
+
+​         
+
+### JDBC
+
+- Java application이 RDB에 접속하기 위한 Java Standard API 
+- JDBC 프로그램이 순서 4단계 
+- ![image-20201021071001025](C:\Users\eunseon\AppData\Roaming\Typora\typora-user-images\image-20201021071001025.png)
+
+1. JDBC 드라이버 로딩 
+
+   public class DBUtil {
+
+    static  String url = "jdbc:mysql:// localhost:3306/ssafy_hrm?server?~"
+
+    static  String user = "ssafy";
+
+   static String pw = "ssafy"; 
+
+   static (
+
+   1. jdbc드라이버 로딩 
+
+      //Class.forName 메소드를 이요해 드라이버 로딩 
+
+      try {
+
+      Class.forName("com.mysql.cj.jdbc.Driver");
+
+      }catch (Exception e){
+
+       e.printStackTrace();
+
+        sout("drive loading 실패");
+
+      }
+
+      )
+
+   }
+
+2. 데이터베이스와 연결 
+
+3. SQL 문 실행 
+
+   3-1 . statement/ preparedstatement 객체를 사용해 원하는 SQL 문 실행
+
+   3-2 . ResultSet에서 데이터 추출 
+
+4. 데이터베이스와의 연결 끊기 (자원반납)
+
+   //2. 데이터베이스와 연결 
+
+   conn = DBUtil.getConncetion ();
+
+   StringBuilder sql = new StringBuilder();
+
+   // 3. sql 문 실행 
+
+   sql.append("select ~"); 
+
+   //3-1. statment객체 생성하여 sql문 실행 
+
+   // connection 객체로 접근해 prepareStatement()메소드를 호출해 생성 
+
+   pstmt = conn.prepareStatement(sql.toString());
+
+   pstmt.setInt(1,productno); 
+
+   //3-2. SQL문 실행해 결과를 rs에 저장
+
+   select 문 -> excuteQuery(); 
+
+   update, delete, insert문 -> executeUpdate(); 
+
+   rs= pstmt.executeQuery (); 
+
+   //ResultSet에서 데이터 추출
+
+   if(rs.next()){
+
+   productDto= new Product();
+
+   productDto.setProductno(rs.getnt("productno"));
+
+   productDto.setName(rs.getnt("productno"));
+
+   productDto.setPrice(rs.getnt("productno"));
+
+   
+
+   }
+
+   //4. 자원반납 
+
+   DButil.close(rs);
+
+   
 ### SQL 정리 
 
 #### 정규화가 필요한 이유 
